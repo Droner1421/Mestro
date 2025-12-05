@@ -1,0 +1,383 @@
+================================================================================
+                    CONSULTAS API - MÓDULO MAESTROS
+================================================================================
+
+1. LISTAR MAESTROS POR ÁREA
+   ─────────────────────────────────────────────────────────────────────────
+   Descripción: Obtiene todos los maestros que pertenecen a un área específica
+   
+   Endpoint: GET /api/maestros/area/:area
+   
+   Parámetros:
+   - area (string, path): Nombre del área (ej: Matemáticas, Inglés, etc.)
+   - page (number, query, opcional): Número de página (default: 1)
+   - limit (number, query, opcional): Límite de resultados por página (default: 10)
+   
+   Ejemplo de solicitud:
+   GET /api/maestros/area/Matemáticas?page=1&limit=10
+   
+   Respuesta exitosa (200):
+   {
+     "pagination": {
+       "total": 5,
+       "limit": 10,
+       "currentPage": 1,
+       "totalPages": 1,
+       "next": null,
+       "prev": null
+     },
+     "data": [
+       {
+         "id_maestro": 1,
+         "nombre": "Juan",
+         "apellido": "Pérez",
+         "correo": "juan@ejemplo.com",
+         "area": "Matemáticas",
+         "nivel_academico": "Maestría",
+         "fecha_ingreso": "2020-01-15",
+         "cursos": [...]
+       }
+     ]
+   }
+
+
+2. VER CURSOS IMPARTIDOS POR UN MAESTRO
+   ─────────────────────────────────────────────────────────────────────────
+   Descripción: Obtiene todos los cursos impartidos por un maestro específico
+   
+   Endpoint: GET /api/maestros/cursos/maestro/:id_maestro
+   
+   Parámetros:
+   - id_maestro (number, path): ID del maestro
+   - page (number, query, opcional): Número de página (default: 1)
+   - limit (number, query, opcional): Límite de resultados por página (default: 10)
+   
+   Ejemplo de solicitud:
+   GET /api/maestros/cursos/maestro/1?page=1&limit=10
+   
+   Respuesta exitosa (200):
+   {
+     "pagination": {
+       "total": 3,
+       "limit": 10,
+       "currentPage": 1,
+       "totalPages": 1,
+       "next": null,
+       "prev": null
+     },
+     "data": [
+       {
+         "id_curso": 1,
+         "id_maestro": 1,
+         "nombre": "Cálculo I",
+         "clave": "MAT101",
+         "grupo": "A",
+         "horario": "09:00-10:30",
+         "salon": "101",
+         "maestro": {...},
+         "examenes": [...]
+       }
+     ]
+   }
+
+
+3. CONSULTAR EXÁMENES DEL TIPO PARCIAL
+   ─────────────────────────────────────────────────────────────────────────
+   Descripción: Obtiene todos los exámenes de un tipo específico (Parcial/Final/Extraordinario)
+   
+   Endpoint: GET /api/maestros/examenes/tipo/:tipo
+   
+   Parámetros:
+   - tipo (string, path): Tipo de examen (Parcial, Final, Extraordinario)
+   - page (number, query, opcional): Número de página (default: 1)
+   - limit (number, query, opcional): Límite de resultados por página (default: 10)
+   
+   Ejemplo de solicitud:
+   GET /api/maestros/examenes/tipo/Parcial?page=1&limit=10
+   
+   Respuesta exitosa (200):
+   {
+     "pagination": {
+       "total": 8,
+       "limit": 10,
+       "currentPage": 1,
+       "totalPages": 1,
+       "next": null,
+       "prev": null
+     },
+     "data": [
+       {
+         "id_examen": 1,
+         "id_curso": 1,
+         "tipo": "Parcial",
+         "fecha": "2024-10-15",
+         "promedio": 7.5,
+         "comentarios": "Buen desempeño",
+         "curso": {...},
+         "curso.maestro": {...}
+       }
+     ]
+   }
+
+
+4. VER EXÁMENES APLICADOS EN UNA FECHA
+   ─────────────────────────────────────────────────────────────────────────
+   Descripción: Obtiene todos los exámenes realizados en una fecha específica
+   
+   Endpoint: GET /api/maestros/examenes/fecha/:fecha
+   
+   Parámetros:
+   - fecha (string, path): Fecha en formato YYYY-MM-DD (ej: 2024-12-04)
+   - page (number, query, opcional): Número de página (default: 1)
+   - limit (number, query, opcional): Límite de resultados por página (default: 10)
+   
+   Ejemplo de solicitud:
+   GET /api/maestros/examenes/fecha/2024-12-04?page=1&limit=10
+   
+   Respuesta exitosa (200):
+   {
+     "pagination": {
+       "total": 4,
+       "limit": 10,
+       "currentPage": 1,
+       "totalPages": 1,
+       "next": null,
+       "prev": null
+     },
+     "data": [
+       {
+         "id_examen": 5,
+         "id_curso": 2,
+         "tipo": "Final",
+         "fecha": "2024-12-04",
+         "promedio": 8.2,
+         "comentarios": null,
+         "curso": {...},
+         "curso.maestro": {...}
+       }
+     ]
+   }
+
+
+5. CONTAR EXÁMENES POR CURSO
+   ─────────────────────────────────────────────────────────────────────────
+   Descripción: Devuelve el total de exámenes asociados a un curso específico
+   
+   Endpoint: GET /api/maestros/examenes/contar/:id_curso
+   
+   Parámetros:
+   - id_curso (number, path): ID del curso
+   
+   Ejemplo de solicitud:
+   GET /api/maestros/examenes/contar/1
+   
+   Respuesta exitosa (200):
+   {
+     "id_curso": 1,
+     "total_examenes": 5
+   }
+
+
+6. CONSULTAR CURSOS DE UN GRUPO ESPECÍFICO
+   ─────────────────────────────────────────────────────────────────────────
+   Descripción: Obtiene todos los cursos que pertenecen a un grupo específico
+   
+   Endpoint: GET /api/maestros/cursos/grupo/:grupo
+   
+   Parámetros:
+   - grupo (string, path): Identificador del grupo (ej: A, B, 1A, etc.)
+   - page (number, query, opcional): Número de página (default: 1)
+   - limit (number, query, opcional): Límite de resultados por página (default: 10)
+   
+   Ejemplo de solicitud:
+   GET /api/maestros/cursos/grupo/A?page=1&limit=10
+   
+   Respuesta exitosa (200):
+   {
+     "pagination": {
+       "total": 6,
+       "limit": 10,
+       "currentPage": 1,
+       "totalPages": 1,
+       "next": null,
+       "prev": null
+     },
+     "data": [
+       {
+         "id_curso": 1,
+         "id_maestro": 1,
+         "nombre": "Cálculo I",
+         "clave": "MAT101",
+         "grupo": "A",
+         "horario": "09:00-10:30",
+         "salon": "101",
+         "maestro": {...},
+         "examenes": [...]
+       }
+     ]
+   }
+
+
+7. VER MAESTROS CON MAYOR NIVEL ACADÉMICO
+   ─────────────────────────────────────────────────────────────────────────
+   Descripción: Obtiene todos los maestros con un nivel académico específico
+   
+   Endpoint: GET /api/maestros/nivel-academico/:nivel_academico
+   
+   Parámetros:
+   - nivel_academico (string, path): Nivel académico (Licenciatura, Maestría, Doctorado, etc.)
+   - page (number, query, opcional): Número de página (default: 1)
+   - limit (number, query, opcional): Límite de resultados por página (default: 10)
+   
+   Ejemplo de solicitud:
+   GET /api/maestros/nivel-academico/Doctorado?page=1&limit=10
+   
+   Respuesta exitosa (200):
+   {
+     "pagination": {
+       "total": 2,
+       "limit": 10,
+       "currentPage": 1,
+       "totalPages": 1,
+       "next": null,
+       "prev": null
+     },
+     "data": [
+       {
+         "id_maestro": 3,
+         "nombre": "Carlos",
+         "apellido": "García",
+         "correo": "carlos@ejemplo.com",
+         "area": "Investigación",
+         "nivel_academico": "Doctorado",
+         "fecha_ingreso": "2018-06-20",
+         "cursos": [...]
+       }
+     ]
+   }
+
+
+8. MOSTRAR CURSOS JUNTO CON SUS EXÁMENES
+   ─────────────────────────────────────────────────────────────────────────
+   Descripción: Obtiene todos los cursos con toda la información de sus exámenes asociados
+   
+   Endpoint: GET /api/maestros/cursos/con-examenes
+   
+   Parámetros:
+   - page (number, query, opcional): Número de página (default: 1)
+   - limit (number, query, opcional): Límite de resultados por página (default: 10)
+   
+   Ejemplo de solicitud:
+   GET /api/maestros/cursos/con-examenes?page=1&limit=10
+   
+   Respuesta exitosa (200):
+   {
+     "pagination": {
+       "total": 12,
+       "limit": 10,
+       "currentPage": 1,
+       "totalPages": 2,
+       "next": "http://localhost:3000/api/maestros/cursos/con-examenes?page=2&limit=10",
+       "prev": null
+     },
+     "data": [
+       {
+         "id_curso": 1,
+         "id_maestro": 1,
+         "nombre": "Cálculo I",
+         "clave": "MAT101",
+         "grupo": "A",
+         "horario": "09:00-10:30",
+         "salon": "101",
+         "maestro": {
+           "id_maestro": 1,
+           "nombre": "Juan",
+           "apellido": "Pérez",
+           "correo": "juan@ejemplo.com",
+           "area": "Matemáticas",
+           "nivel_academico": "Maestría",
+           "fecha_ingreso": "2020-01-15"
+         },
+         "examenes": [
+           {
+             "id_examen": 1,
+             "id_curso": 1,
+             "tipo": "Parcial",
+             "fecha": "2024-10-15",
+             "promedio": 7.5,
+             "comentarios": "Buen desempeño"
+           },
+           {
+             "id_examen": 2,
+             "id_curso": 1,
+             "tipo": "Final",
+             "fecha": "2024-12-20",
+             "promedio": 8.2,
+             "comentarios": null
+           }
+         ]
+       }
+     ]
+   }
+
+
+================================================================================
+                         ENDPOINTS ADICIONALES (CRUD)
+================================================================================
+
+MAESTROS:
+─────────
+POST   /api/maestros                    - Crear nuevo maestro
+GET    /api/maestros                    - Listar todos los maestros
+GET    /api/maestros/:id                - Obtener un maestro específico
+PATCH  /api/maestros/:id                - Actualizar maestro
+DELETE /api/maestros/:id                - Eliminar maestro
+
+CURSOS:
+───────
+POST   /api/maestros/curso              - Crear nuevo curso
+GET    /api/maestros/cursos/all         - Listar todos los cursos
+GET    /api/maestros/cursos/:id         - Obtener un curso específico
+PATCH  /api/maestros/cursos/:id         - Actualizar curso
+DELETE /api/maestros/cursos/:id         - Eliminar curso
+
+EXÁMENES:
+─────────
+POST   /api/maestros/examen             - Crear nuevo examen
+GET    /api/maestros/examenes/all       - Listar todos los exámenes
+GET    /api/maestros/examenes/:id       - Obtener un examen específico
+PATCH  /api/maestros/examenes/:id       - Actualizar examen
+DELETE /api/maestros/examenes/:id       - Eliminar examen
+
+
+================================================================================
+                              NOTAS IMPORTANTES
+================================================================================
+
+1. Base de datos: MySQL (XAMPP)
+   - Host: localhost
+   - Puerto: 3306
+   - Usuario: root
+   - Contraseña: (vacía)
+   - Base de datos: maestros
+
+2. Validaciones:
+   - Al crear un curso, se valida que el maestro (id_maestro) exista
+   - Al crear un examen, se valida que el curso (id_curso) exista
+   - Al actualizar, se valida la existencia de las FK correspondientes
+
+3. Paginación:
+   - Todos los GET que retornan múltiples registros usan paginación
+   - Default: página 1, límite 10 resultados por página
+   - Las respuestas incluyen enlaces de navegación (next, prev)
+
+4. Relaciones:
+   - Maestro (1) a Muchos (N) Cursos
+   - Curso (1) a Muchos (N) Exámenes
+   - Al obtener registros, se incluyen las relaciones asociadas
+
+5. Formato de fechas:
+   - Todas las fechas deben enviarse en formato YYYY-MM-DD
+   - Ejemplo: 2024-12-04
+
+================================================================================

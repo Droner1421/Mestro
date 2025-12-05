@@ -1,0 +1,762 @@
+================================================================================
+                   INTERFAZ API - MÓDULO MAESTROS
+                        Documentación Completa
+================================================================================
+
+BASE URL: http://localhost:3000/api/maestros
+MÉTODO DE AUTENTICACIÓN: Ninguno (sin autenticación)
+FORMATO DE DATOS: JSON
+PUERTO: 3000
+
+================================================================================
+                            1. MAESTROS
+================================================================================
+
+1.1 CREAR MAESTRO
+─────────────────────────────────────────────────────────────────────────────
+Método: POST
+Endpoint: /maestros
+Descripción: Crea un nuevo maestro en la base de datos
+
+Body (JSON):
+{
+  "nombre": "Juan",
+  "apellido": "Pérez",
+  "correo": "juan@example.com",
+  "area": "Matemáticas",
+  "nivel_academico": "Maestría",
+  "fecha_ingreso": "2020-01-15"
+}
+
+Respuesta exitosa (201):
+{
+  "id_maestro": 1,
+  "nombre": "Juan",
+  "apellido": "Pérez",
+  "correo": "juan@example.com",
+  "area": "Matemáticas",
+  "nivel_academico": "Maestría",
+  "fecha_ingreso": "2020-01-15"
+}
+
+Errores posibles:
+- 400: Datos inválidos o incompletos
+- 500: Error del servidor
+
+
+1.2 LISTAR TODOS LOS MAESTROS
+─────────────────────────────────────────────────────────────────────────────
+Método: GET
+Endpoint: /maestros
+Parámetros Query (opcionales):
+  - page: number (default: 1)
+  - limit: number (default: 10)
+
+Ejemplo: GET /maestros?page=1&limit=10
+
+Respuesta exitosa (200):
+{
+  "pagination": {
+    "total": 5,
+    "limit": 10,
+    "currentPage": 1,
+    "totalPages": 1,
+    "next": null,
+    "prev": null
+  },
+  "data": [
+    {
+      "id_maestro": 1,
+      "nombre": "Juan",
+      "apellido": "Pérez",
+      "correo": "juan@example.com",
+      "area": "Matemáticas",
+      "nivel_academico": "Maestría",
+      "fecha_ingreso": "2020-01-15",
+      "cursos": []
+    }
+  ]
+}
+
+
+1.3 OBTENER UN MAESTRO ESPECÍFICO
+─────────────────────────────────────────────────────────────────────────────
+Método: GET
+Endpoint: /maestros/:id
+Parámetro Path:
+  - id: number (ID del maestro)
+
+Ejemplo: GET /maestros/1
+
+Respuesta exitosa (200):
+{
+  "id_maestro": 1,
+  "nombre": "Juan",
+  "apellido": "Pérez",
+  "correo": "juan@example.com",
+  "area": "Matemáticas",
+  "nivel_academico": "Maestría",
+  "fecha_ingreso": "2020-01-15",
+  "cursos": []
+}
+
+Errores posibles:
+- 404: Maestro no encontrado
+
+
+1.4 ACTUALIZAR UN MAESTRO
+─────────────────────────────────────────────────────────────────────────────
+Método: PATCH
+Endpoint: /maestros/:id
+Parámetro Path:
+  - id: number (ID del maestro)
+
+Body (JSON - todos los campos son opcionales):
+{
+  "nombre": "Juan Carlos",
+  "apellido": "Pérez García",
+  "correo": "juancarlos@example.com",
+  "area": "Ciencias",
+  "nivel_academico": "Doctorado",
+  "fecha_ingreso": "2020-01-15"
+}
+
+Respuesta exitosa (200):
+{
+  "id_maestro": 1,
+  "nombre": "Juan Carlos",
+  "apellido": "Pérez García",
+  "correo": "juancarlos@example.com",
+  "area": "Ciencias",
+  "nivel_academico": "Doctorado",
+  "fecha_ingreso": "2020-01-15",
+  "cursos": []
+}
+
+Errores posibles:
+- 404: Maestro no encontrado
+- 400: Datos inválidos
+
+
+1.5 ELIMINAR UN MAESTRO
+─────────────────────────────────────────────────────────────────────────────
+Método: DELETE
+Endpoint: /maestros/:id
+Parámetro Path:
+  - id: number (ID del maestro)
+
+Ejemplo: DELETE /maestros/1
+
+Respuesta exitosa (200):
+{
+  "message": "Maestro 1 eliminado correctamente"
+}
+
+Errores posibles:
+- 404: Maestro no encontrado
+
+
+1.6 MAESTROS POR ÁREA
+─────────────────────────────────────────────────────────────────────────────
+Método: GET
+Endpoint: /maestros/area/:area
+Parámetro Path:
+  - area: string (Nombre del área)
+Parámetros Query (opcionales):
+  - page: number (default: 1)
+  - limit: number (default: 10)
+
+Ejemplo: GET /maestros/area/Matemáticas?page=1&limit=10
+
+Respuesta exitosa (200):
+{
+  "pagination": {
+    "total": 3,
+    "limit": 10,
+    "currentPage": 1,
+    "totalPages": 1,
+    "next": null,
+    "prev": null
+  },
+  "data": [...]
+}
+
+
+1.7 MAESTROS POR NIVEL ACADÉMICO
+─────────────────────────────────────────────────────────────────────────────
+Método: GET
+Endpoint: /maestros/nivel-academico/:nivel_academico
+Parámetro Path:
+  - nivel_academico: string (Licenciatura, Maestría, Doctorado, etc.)
+Parámetros Query (opcionales):
+  - page: number (default: 1)
+  - limit: number (default: 10)
+
+Ejemplo: GET /maestros/nivel-academico/Doctorado?page=1&limit=10
+
+Respuesta exitosa (200):
+{
+  "pagination": {...},
+  "data": [...]
+}
+
+
+================================================================================
+                            2. CURSOS
+================================================================================
+
+2.1 CREAR CURSO
+─────────────────────────────────────────────────────────────────────────────
+Método: POST
+Endpoint: /maestros/curso
+Descripción: Crea un nuevo curso asociado a un maestro
+
+Body (JSON):
+{
+  "id_maestro": 1,
+  "nombre": "Cálculo I",
+  "clave": "MAT101",
+  "grupo": "A",
+  "horario": "09:00-10:30",
+  "salon": "101"
+}
+
+Respuesta exitosa (201):
+{
+  "id_curso": 1,
+  "id_maestro": 1,
+  "nombre": "Cálculo I",
+  "clave": "MAT101",
+  "grupo": "A",
+  "horario": "09:00-10:30",
+  "salon": "101",
+  "maestro": {...},
+  "examenes": []
+}
+
+Errores posibles:
+- 400: Datos inválidos
+- 404: Maestro no encontrado
+- 500: Error del servidor
+
+NOTA: El maestro (id_maestro) debe existir en la base de datos
+
+
+2.2 LISTAR TODOS LOS CURSOS
+─────────────────────────────────────────────────────────────────────────────
+Método: GET
+Endpoint: /maestros/cursos/all
+Parámetros Query (opcionales):
+  - page: number (default: 1)
+  - limit: number (default: 10)
+
+Ejemplo: GET /maestros/cursos/all?page=1&limit=10
+
+Respuesta exitosa (200):
+{
+  "pagination": {...},
+  "data": [
+    {
+      "id_curso": 1,
+      "id_maestro": 1,
+      "nombre": "Cálculo I",
+      "clave": "MAT101",
+      "grupo": "A",
+      "horario": "09:00-10:30",
+      "salon": "101",
+      "maestro": {...},
+      "examenes": [...]
+    }
+  ]
+}
+
+
+2.3 OBTENER UN CURSO ESPECÍFICO
+─────────────────────────────────────────────────────────────────────────────
+Método: GET
+Endpoint: /maestros/cursos/:id
+Parámetro Path:
+  - id: number (ID del curso)
+
+Ejemplo: GET /maestros/cursos/1
+
+Respuesta exitosa (200):
+{
+  "id_curso": 1,
+  "id_maestro": 1,
+  "nombre": "Cálculo I",
+  "clave": "MAT101",
+  "grupo": "A",
+  "horario": "09:00-10:30",
+  "salon": "101",
+  "maestro": {...},
+  "examenes": [...]
+}
+
+Errores posibles:
+- 404: Curso no encontrado
+
+
+2.4 ACTUALIZAR UN CURSO
+─────────────────────────────────────────────────────────────────────────────
+Método: PATCH
+Endpoint: /maestros/cursos/:id
+Parámetro Path:
+  - id: number (ID del curso)
+
+Body (JSON - todos los campos son opcionales):
+{
+  "nombre": "Cálculo Avanzado",
+  "horario": "10:30-12:00",
+  "salon": "102"
+}
+
+Respuesta exitosa (200):
+{
+  "id_curso": 1,
+  "id_maestro": 1,
+  "nombre": "Cálculo Avanzado",
+  "clave": "MAT101",
+  "grupo": "A",
+  "horario": "10:30-12:00",
+  "salon": "102",
+  "maestro": {...},
+  "examenes": [...]
+}
+
+Errores posibles:
+- 404: Curso no encontrado
+- 400: Datos inválidos
+
+
+2.5 ELIMINAR UN CURSO
+─────────────────────────────────────────────────────────────────────────────
+Método: DELETE
+Endpoint: /maestros/cursos/:id
+Parámetro Path:
+  - id: number (ID del curso)
+
+Ejemplo: DELETE /maestros/cursos/1
+
+Respuesta exitosa (200):
+{
+  "message": "Curso 1 eliminado correctamente"
+}
+
+Errores posibles:
+- 404: Curso no encontrado
+
+
+2.6 CURSOS POR MAESTRO
+─────────────────────────────────────────────────────────────────────────────
+Método: GET
+Endpoint: /maestros/cursos/maestro/:id_maestro
+Parámetro Path:
+  - id_maestro: number (ID del maestro)
+Parámetros Query (opcionales):
+  - page: number (default: 1)
+  - limit: number (default: 10)
+
+Ejemplo: GET /maestros/cursos/maestro/1?page=1&limit=10
+
+Respuesta exitosa (200):
+{
+  "pagination": {...},
+  "data": [...]
+}
+
+Errores posibles:
+- 404: Maestro no encontrado
+
+
+2.7 CURSOS POR GRUPO
+─────────────────────────────────────────────────────────────────────────────
+Método: GET
+Endpoint: /maestros/cursos/grupo/:grupo
+Parámetro Path:
+  - grupo: string (Identificador del grupo: A, B, 1A, etc.)
+Parámetros Query (opcionales):
+  - page: number (default: 1)
+  - limit: number (default: 10)
+
+Ejemplo: GET /maestros/cursos/grupo/A?page=1&limit=10
+
+Respuesta exitosa (200):
+{
+  "pagination": {...},
+  "data": [...]
+}
+
+
+2.8 CURSOS CON EXÁMENES
+─────────────────────────────────────────────────────────────────────────────
+Método: GET
+Endpoint: /maestros/cursos/con-examenes
+Parámetros Query (opcionales):
+  - page: number (default: 1)
+  - limit: number (default: 10)
+
+Ejemplo: GET /maestros/cursos/con-examenes?page=1&limit=10
+
+Respuesta exitosa (200):
+{
+  "pagination": {...},
+  "data": [
+    {
+      "id_curso": 1,
+      "id_maestro": 1,
+      "nombre": "Cálculo I",
+      "clave": "MAT101",
+      "grupo": "A",
+      "horario": "09:00-10:30",
+      "salon": "101",
+      "maestro": {...},
+      "examenes": [...]
+    }
+  ]
+}
+
+
+================================================================================
+                            3. EXÁMENES
+================================================================================
+
+3.1 CREAR EXAMEN
+─────────────────────────────────────────────────────────────────────────────
+Método: POST
+Endpoint: /maestros/examen
+Descripción: Crea un nuevo examen asociado a un curso
+
+Body (JSON):
+{
+  "id_curso": 1,
+  "tipo": "Parcial",
+  "fecha": "2024-10-15",
+  "promedio": 7.5,
+  "comentarios": "Buen desempeño"
+}
+
+Respuesta exitosa (201):
+{
+  "id_examen": 1,
+  "id_curso": 1,
+  "tipo": "Parcial",
+  "fecha": "2024-10-15",
+  "promedio": 7.5,
+  "comentarios": "Buen desempeño",
+  "curso": {...}
+}
+
+Errores posibles:
+- 400: Datos inválidos
+- 404: Curso no encontrado
+- 500: Error del servidor
+
+NOTA: El curso (id_curso) debe existir en la base de datos
+NOTA: tipo debe ser: "Parcial", "Final" o "Extraordinario"
+
+
+3.2 LISTAR TODOS LOS EXÁMENES
+─────────────────────────────────────────────────────────────────────────────
+Método: GET
+Endpoint: /maestros/examenes/all
+Parámetros Query (opcionales):
+  - page: number (default: 1)
+  - limit: number (default: 10)
+
+Ejemplo: GET /maestros/examenes/all?page=1&limit=10
+
+Respuesta exitosa (200):
+{
+  "pagination": {...},
+  "data": [
+    {
+      "id_examen": 1,
+      "id_curso": 1,
+      "tipo": "Parcial",
+      "fecha": "2024-10-15",
+      "promedio": 7.5,
+      "comentarios": "Buen desempeño",
+      "curso": {...}
+    }
+  ]
+}
+
+
+3.3 OBTENER UN EXAMEN ESPECÍFICO
+─────────────────────────────────────────────────────────────────────────────
+Método: GET
+Endpoint: /maestros/examenes/:id
+Parámetro Path:
+  - id: number (ID del examen)
+
+Ejemplo: GET /maestros/examenes/1
+
+Respuesta exitosa (200):
+{
+  "id_examen": 1,
+  "id_curso": 1,
+  "tipo": "Parcial",
+  "fecha": "2024-10-15",
+  "promedio": 7.5,
+  "comentarios": "Buen desempeño",
+  "curso": {...}
+}
+
+Errores posibles:
+- 404: Examen no encontrado
+
+
+3.4 ACTUALIZAR UN EXAMEN
+─────────────────────────────────────────────────────────────────────────────
+Método: PATCH
+Endpoint: /maestros/examenes/:id
+Parámetro Path:
+  - id: number (ID del examen)
+
+Body (JSON - todos los campos son opcionales):
+{
+  "tipo": "Final",
+  "promedio": 8.2,
+  "comentarios": "Excelente desempeño"
+}
+
+Respuesta exitosa (200):
+{
+  "id_examen": 1,
+  "id_curso": 1,
+  "tipo": "Final",
+  "fecha": "2024-10-15",
+  "promedio": 8.2,
+  "comentarios": "Excelente desempeño",
+  "curso": {...}
+}
+
+Errores posibles:
+- 404: Examen no encontrado
+- 400: Datos inválidos
+
+
+3.5 ELIMINAR UN EXAMEN
+─────────────────────────────────────────────────────────────────────────────
+Método: DELETE
+Endpoint: /maestros/examenes/:id
+Parámetro Path:
+  - id: number (ID del examen)
+
+Ejemplo: DELETE /maestros/examenes/1
+
+Respuesta exitosa (200):
+{
+  "message": "Examen 1 eliminado correctamente"
+}
+
+Errores posibles:
+- 404: Examen no encontrado
+
+
+3.6 EXÁMENES POR TIPO
+─────────────────────────────────────────────────────────────────────────────
+Método: GET
+Endpoint: /maestros/examenes/tipo/:tipo
+Parámetro Path:
+  - tipo: string (Parcial, Final, Extraordinario)
+Parámetros Query (opcionales):
+  - page: number (default: 1)
+  - limit: number (default: 10)
+
+Ejemplo: GET /maestros/examenes/tipo/Parcial?page=1&limit=10
+
+Respuesta exitosa (200):
+{
+  "pagination": {...},
+  "data": [...]
+}
+
+
+3.7 EXÁMENES POR FECHA
+─────────────────────────────────────────────────────────────────────────────
+Método: GET
+Endpoint: /maestros/examenes/fecha/:fecha
+Parámetro Path:
+  - fecha: string (Formato YYYY-MM-DD, ej: 2024-12-04)
+Parámetros Query (opcionales):
+  - page: number (default: 1)
+  - limit: number (default: 10)
+
+Ejemplo: GET /maestros/examenes/fecha/2024-12-04?page=1&limit=10
+
+Respuesta exitosa (200):
+{
+  "pagination": {...},
+  "data": [...]
+}
+
+
+3.8 CONTAR EXÁMENES POR CURSO
+─────────────────────────────────────────────────────────────────────────────
+Método: GET
+Endpoint: /maestros/examenes/contar/:id_curso
+Parámetro Path:
+  - id_curso: number (ID del curso)
+
+Ejemplo: GET /maestros/examenes/contar/1
+
+Respuesta exitosa (200):
+{
+  "id_curso": 1,
+  "total_examenes": 5
+}
+
+Errores posibles:
+- 404: Curso no encontrado
+
+
+================================================================================
+                         CÓDIGOS DE ESTADO HTTP
+================================================================================
+
+200 OK
+  Solicitud exitosa, la respuesta contiene los datos solicitados
+
+201 Created
+  Recurso creado exitosamente
+
+400 Bad Request
+  Error en los datos enviados (formato inválido, campos faltantes, etc.)
+
+404 Not Found
+  El recurso solicitado no existe en la base de datos
+
+500 Internal Server Error
+  Error del servidor
+
+
+================================================================================
+                         VALIDACIONES Y RESTRICCIONES
+================================================================================
+
+MAESTROS:
+  - nombre: string, requerido, máximo 100 caracteres
+  - apellido: string, requerido, máximo 100 caracteres
+  - correo: string, requerido, formato email válido
+  - area: string, requerido, máximo 100 caracteres
+  - nivel_academico: string, requerido (ej: Licenciatura, Maestría, Doctorado)
+  - fecha_ingreso: string, requerido, formato YYYY-MM-DD
+
+CURSOS:
+  - id_maestro: number, requerido, debe existir en tabla Maestro
+  - nombre: string, requerido, máximo 150 caracteres
+  - clave: string, requerido, máximo 20 caracteres
+  - grupo: string, requerido, máximo 10 caracteres
+  - horario: string, requerido, máximo 50 caracteres
+  - salon: string, requerido, máximo 20 caracteres
+
+EXÁMENES:
+  - id_curso: number, requerido, debe existir en tabla Curso
+  - tipo: string, requerido, valores válidos: "Parcial", "Final", "Extraordinario"
+  - fecha: string, requerido, formato YYYY-MM-DD
+  - promedio: number, requerido, rango 0-10 (decimales permitidos)
+  - comentarios: string, opcional, máximo 500 caracteres
+
+
+================================================================================
+                         RELACIONES EN LA BASE DE DATOS
+================================================================================
+
+MAESTRO (1) ─→ (N) CURSO
+  - Un maestro puede impartir múltiples cursos
+  - Un curso pertenece a un solo maestro
+  - Clave foránea: Curso.id_maestro
+
+CURSO (1) ─→ (N) EXAMEN
+  - Un curso puede tener múltiples exámenes
+  - Un examen pertenece a un solo curso
+  - Clave foránea: Examen.id_curso
+
+
+================================================================================
+                         EJEMPLOS DE USO CON CURL
+================================================================================
+
+1. CREAR MAESTRO:
+curl -X POST http://localhost:3000/api/maestros \
+  -H "Content-Type: application/json" \
+  -d '{
+    "nombre": "Juan",
+    "apellido": "Pérez",
+    "correo": "juan@example.com",
+    "area": "Matemáticas",
+    "nivel_academico": "Maestría",
+    "fecha_ingreso": "2020-01-15"
+  }'
+
+2. LISTAR MAESTROS:
+curl -X GET http://localhost:3000/api/maestros?page=1&limit=10
+
+3. OBTENER MAESTRO:
+curl -X GET http://localhost:3000/api/maestros/1
+
+4. ACTUALIZAR MAESTRO:
+curl -X PATCH http://localhost:3000/api/maestros/1 \
+  -H "Content-Type: application/json" \
+  -d '{
+    "nombre": "Juan Carlos"
+  }'
+
+5. ELIMINAR MAESTRO:
+curl -X DELETE http://localhost:3000/api/maestros/1
+
+6. CREAR CURSO:
+curl -X POST http://localhost:3000/api/maestros/curso \
+  -H "Content-Type: application/json" \
+  -d '{
+    "id_maestro": 1,
+    "nombre": "Cálculo I",
+    "clave": "MAT101",
+    "grupo": "A",
+    "horario": "09:00-10:30",
+    "salon": "101"
+  }'
+
+7. CREAR EXAMEN:
+curl -X POST http://localhost:3000/api/maestros/examen \
+  -H "Content-Type: application/json" \
+  -d '{
+    "id_curso": 1,
+    "tipo": "Parcial",
+    "fecha": "2024-10-15",
+    "promedio": 7.5,
+    "comentarios": "Buen desempeño"
+  }'
+
+8. MAESTROS POR ÁREA:
+curl -X GET http://localhost:3000/api/maestros/area/Matemáticas?page=1&limit=10
+
+9. EXÁMENES POR TIPO:
+curl -X GET http://localhost:3000/api/maestros/examenes/tipo/Parcial?page=1&limit=10
+
+10. CONTAR EXÁMENES:
+curl -X GET http://localhost:3000/api/maestros/examenes/contar/1
+
+
+================================================================================
+                         INFORMACIÓN DE LA BASE DE DATOS
+================================================================================
+
+TIPO: MySQL
+HOST: localhost
+PUERTO: 3306
+USUARIO: root
+CONTRASEÑA: (vacía)
+NOMBRE BD: maestros
+
+TABLAS:
+  - maestro (id_maestro, nombre, apellido, correo, area, nivel_academico, fecha_ingreso)
+  - curso (id_curso, id_maestro, nombre, clave, grupo, horario, salon)
+  - examen (id_examen, id_curso, tipo, fecha, promedio, comentarios)
+
+SINCRONIZACIÓN: Automática (synchronize: true)
+
+
+================================================================================
